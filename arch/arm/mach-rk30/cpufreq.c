@@ -75,11 +75,11 @@ static DEFINE_MUTEX(cpufreq_mutex);
 
 static struct clk *gpu_clk;
 #ifdef CONFIG_MALI_400
-#define GPU_MAX_RATE 400*1000*1000
+#define GPU_MAX_RATE 266*1000*1000
 #endif
 static struct clk *ddr_clk;
 #if !defined(CONFIG_ARCH_RK3066B) && !defined(CONFIG_ARCH_RK3188)
-#define GPU_MAX_RATE 400*1000*1000
+#define GPU_MAX_RATE 266*1000*1000
 #endif
 
 
@@ -274,7 +274,7 @@ static int rk30_cpu_init(struct cpufreq_policy *policy)
 {
 	if (policy->cpu == 0) {
 		int i;
-		
+
 		gpu_clk = clk_get(NULL, "gpu");
 		if (!IS_ERR(gpu_clk))
 			clk_enable_dvfs(gpu_clk);
@@ -282,11 +282,11 @@ static int rk30_cpu_init(struct cpufreq_policy *policy)
 		ddr_clk = clk_get(NULL, "ddr");
 		if (!IS_ERR(ddr_clk))
 			clk_enable_dvfs(ddr_clk);
-		
+
 		cpu_clk = clk_get(NULL, "cpu");
-		
+
 		cpu_pll = clk_get(NULL, "arm_pll");
-		
+
 		cpu_gpll = clk_get(NULL, "arm_gpll");
 		if (IS_ERR(cpu_clk))
 			return PTR_ERR(cpu_clk);
@@ -305,7 +305,7 @@ static int rk30_cpu_init(struct cpufreq_policy *policy)
 #if !defined(CONFIG_ARCH_RK3066B)
 #if defined(CONFIG_ARCH_RK30)
 		/* Limit gpu frequency between 133M to 400M */
-		dvfs_clk_enable_limit(gpu_clk, 133000000, 400000000);
+		dvfs_clk_enable_limit(gpu_clk, 133000000, 266000000);
 #endif
 #endif
 
@@ -401,7 +401,7 @@ static int ff_read(char *file_path, char *buf)
 	sscanf(buf, "%s", buf);
 
 	set_fs(old_fs);
-	filp_close(file, NULL);  
+	filp_close(file, NULL);
 
 	file = NULL;
 
@@ -429,7 +429,7 @@ static int ff_write(char *file_path, char *buf)
 	file->f_op->write(file, (char *)buf, strlen(buf), &offset);
 
 	set_fs(old_fs);
-	filp_close(file, NULL);  
+	filp_close(file, NULL);
 
 	file = NULL;
 
@@ -478,17 +478,17 @@ static void ff_early_suspend_func(struct early_suspend *h)
 		FF_ERROR("set speed to 252MHz error\n");
 		return ;
 	}
-	
+
 	if (!IS_ERR(cpu_pll)&&!IS_ERR(cpu_gpll)&&!IS_ERR(cpu_clk))
 	{
 		clk_set_parent_force(cpu_clk,cpu_gpll);
 		clk_set_rate(cpu_clk,300*1000*1000);
-		
+
 		clk_disable_dvfs(cpu_clk);
-	}	
+	}
 	if (!IS_ERR(gpu_clk))
 		dvfs_clk_enable_limit(gpu_clk,75*1000*1000,133*1000*1000);
-	
+
 	//ff_scale_votlage("vdd_cpu", 1000000);
 	//ff_scale_votlage("vdd_core", 1000000);
 #ifdef CONFIG_HOTPLUG_CPU
@@ -506,8 +506,8 @@ static void ff_early_resume_func(struct early_suspend *h)
 		clk_set_parent_force(cpu_clk,cpu_pll);
 		clk_set_rate(cpu_clk,300*1000*1000);
 		clk_enable_dvfs(cpu_clk);
-	}	
-	
+	}
+
 	if (!IS_ERR(gpu_clk))
 		dvfs_clk_disable_limit(gpu_clk);
 #ifdef CONFIG_HOTPLUG_CPU
@@ -532,7 +532,7 @@ static void ff_early_resume_func(struct early_suspend *h)
 		FF_ERROR("set current governor error\n");
 		return ;
 	}
-	
+
 	strcpy(buf, "interactive");
 	if (ff_write(FILE_GOV_MODE, buf) != 0) {
 		FF_ERROR("set current governor error\n");
