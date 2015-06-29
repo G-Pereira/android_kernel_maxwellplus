@@ -707,9 +707,9 @@ static u8 rk30_get_avs_val(void)
 	unsigned long flags;
 	u32 paramet = 0;
 	u32 count = 100;
-	if(rk30_nandc_base==NULL)	
+	if(rk30_nandc_base==NULL)
 		return 0;
-		
+
 	preempt_disable();
 	local_irq_save(flags);
 
@@ -756,5 +756,3 @@ static struct avs_ctr_st rk30_avs_ctr= {
 	.avs_init 		=rk30_avs_init,
 	.avs_get_val	= rk30_get_avs_val,
 };
-
-

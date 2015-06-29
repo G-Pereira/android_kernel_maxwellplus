@@ -254,7 +254,7 @@ static int clksel_set_rate_freediv(struct clk *clk, unsigned long rate)
 		if (new_rate <= rate) {
 			set_cru_bits_w_msk(div, clk->div_mask, clk->div_shift, clk->clksel_con);
 			//clk->rate = new_rate;
-			pr_debug("clksel_set_rate_freediv for clock %s to rate %ld (div %d)\n", 
+			pr_debug("clksel_set_rate_freediv for clock %s to rate %ld (div %d)\n",
 					clk->name, rate, div + 1);
 			return 0;
 		}
@@ -271,7 +271,7 @@ static int clksel_set_rate_shift(struct clk *clk, unsigned long rate)
 		if (new_rate <= rate) {
 			set_cru_bits_w_msk(shift, clk->div_mask, clk->div_shift, clk->clksel_con);
 			clk->rate = new_rate;
-			pr_debug("clksel_set_rate_shift for clock %s to rate %ld (shift %d)\n", 
+			pr_debug("clksel_set_rate_shift for clock %s to rate %ld (shift %d)\n",
 					clk->name, rate, shift);
 			return 0;
 		}
@@ -289,7 +289,7 @@ static int clksel_set_rate_shift_2(struct clk *clk, unsigned long rate)
 		if (new_rate <= rate) {
 			set_cru_bits_w_msk(shift - 1, clk->div_mask, clk->div_shift, clk->clksel_con);
 			clk->rate = new_rate;
-			pr_debug("clksel_set_rate_shift for clock %s to rate %ld (shift %d)\n", 
+			pr_debug("clksel_set_rate_shift for clock %s to rate %ld (shift %d)\n",
 					clk->name, rate, shift);
 			return 0;
 		}
@@ -309,7 +309,7 @@ static int clksel_set_rate_even(struct clk *clk, unsigned long rate)
 		if (new_rate <= rate) {
 			set_cru_bits_w_msk(div - 1, clk->div_mask, clk->div_shift, clk->clksel_con);
 			clk->rate = new_rate;
-			pr_debug("%s for clock %s to rate %ld (even div = %d)\n", 
+			pr_debug("%s for clock %s to rate %ld (even div = %d)\n",
 					__func__, clk->name, rate, div);
 			return 0;
 		}
@@ -953,7 +953,7 @@ static int arm_pll_clk_set_rate(struct clk *clk, unsigned long rate)
 	}
 
 	// ungating cpu gpll path
-	//cru_writel(CLK_GATE_W_MSK(CLK_GATE_CPU_GPLL_PATH) | CLK_UN_GATE(CLK_GATE_CPU_GPLL_PATH), 
+	//cru_writel(CLK_GATE_W_MSK(CLK_GATE_CPU_GPLL_PATH) | CLK_UN_GATE(CLK_GATE_CPU_GPLL_PATH),
 	//	CLK_GATE_CLKID_CONS(CLK_GATE_CPU_GPLL_PATH));
 
 	local_irq_save(flags);
@@ -1035,8 +1035,8 @@ static int arm_pll_clk_set_rate(struct clk *clk, unsigned long rate)
 /************************************pll clocks***************************/
 
 static const struct apll_clk_set apll_clks[] = {
-	//_APLL_SET_CLKS(_mhz, nr, nf, no, _periph_div, 
-	//		_axi_core_div, _axi_div, _ahb_div, _apb_div, _ahb2apb) 	
+	//_APLL_SET_CLKS(_mhz, nr, nf, no, _periph_div,
+	//		_axi_core_div, _axi_div, _ahb_div, _apb_div, _ahb2apb)
 	_APLL_SET_CLKS(1992, 1, 83, 1, 8, 	81, 81, 21, 41, 21),
 	_APLL_SET_CLKS(1896, 1, 79, 1, 8, 	81, 81, 21, 41, 21),
 	_APLL_SET_CLKS(1800, 1, 75, 1, 8, 	81, 81, 21, 41, 21),
@@ -1407,7 +1407,7 @@ static int clk_gpu_ref_set_rate(struct clk *clk, unsigned long rate)
 	ret=clk_gpu_set_rate(clk, rate);
 	if(ret<0)
 		return ret;
-	ret=clk_set_rate_nolock(&aclk_gpu, rate); 
+	ret=clk_set_rate_nolock(&aclk_gpu, rate);
 	return ret;
 };
 static long clk_gpu_ref_round_rate(struct clk *clk, unsigned long rate)
@@ -1417,9 +1417,9 @@ static long clk_gpu_ref_round_rate(struct clk *clk, unsigned long rate)
 /*
 	if(rate_gpu!=clksel_freediv_round_rate(&aclk_gpu,rate))
 	{
-		CLKDATA_ERR("gpu rate is not equal ack gpu rate in %s\n",__FUNCTION__);	
-	}	
-*/	
+		CLKDATA_ERR("gpu rate is not equal ack gpu rate in %s\n",__FUNCTION__);
+	}
+*/
 	return rate_gpu;
 }
 #endif
@@ -1430,13 +1430,13 @@ static struct clk clk_gpu = {
 	.name		= "gpu",
 	.mode		= gate_mode,
 	.recalc		= clksel_recalc_div,
-#ifdef GPU_CORE_ACLK_CTR_TOGETHER	
+#ifdef GPU_CORE_ACLK_CTR_TOGETHER
 	.round_rate	= clk_gpu_ref_round_rate,
 	.set_rate		= clk_gpu_ref_set_rate,
 #else
 	.round_rate	= clksel_freediv_round_rate,
 	.set_rate		= clk_gpu_set_rate_callback,
-#endif	
+#endif
 	.clksel_con 	= CRU_CLKSELS_CON(33),
 	.gate_idx	= CLK_GATE_CLK_GPU,
 	CRU_DIV_SET(0x1f, 0, 32),
@@ -1456,7 +1456,7 @@ static struct clk aclk_gpu = {
 	CRU_PARENTS_SET(gpu_parents),
 };
 
-#ifdef GPU_CORE_ACLK_CTR_TOGETHER	
+#ifdef GPU_CORE_ACLK_CTR_TOGETHER
 static int clk_aclk_gpu_null_set_rate(struct clk *clk, unsigned long rate)
 {
 	return 0;
@@ -1472,7 +1472,7 @@ static unsigned long  clk_aclk_gpu_null_recalc_div(struct clk *clk)
 }
 //gpu and gpu together ctr,this clk is following aclk gpu.
 static struct clk aclk_gpu_null = {
-	.name		= "aclk_gpu_null",	
+	.name		= "aclk_gpu_null",
 	.parent		= &aclk_gpu,
 	.recalc		= clk_aclk_gpu_null_recalc_div,
 	.round_rate	= clk_aclk_gpu_null_round_rate,
@@ -2597,7 +2597,7 @@ GATE_CLK(hclk_rga,	hclk_cpu, 	HCLK_RGA);
 GATE_CLK(hclk_l2mem,	hclk_cpu, 	HCLK_L2MEM);
 GATE_CLK(hclk_video_h2h, hclk_cpu, 	HCLK_VIDEO_H2H);
 /*************************pclk_cpu***********************/
-GATE_CLK(pwm01,		pclk_cpu, 	PCLK_PWM01);//pwm 0¡¢1
+GATE_CLK(pwm01,		pclk_cpu, 	PCLK_PWM01);//pwm 0ï¿½ï¿½1
 GATE_CLK(pclk_timer0,	pclk_cpu, 	PCLK_TIMER0);
 GATE_CLK(pclk_timer1,	pclk_cpu, 	PCLK_TIMER1);
 GATE_CLK(pclk_timer2,	pclk_cpu, 	PCLK_TIMER2);
@@ -2712,7 +2712,7 @@ static struct clk_lookup clks[] = {
 	CLK1(gpu),
 	#ifdef GPU_CORE_ACLK_CTR_TOGETHER
 	CLK(NULL, "aclk_gpu_real",&aclk_gpu),
-	CLK(NULL, "aclk_gpu",	  &aclk_gpu_null),	
+	CLK(NULL, "aclk_gpu",	  &aclk_gpu_null),
 	#else
 	CLK(NULL, "aclk_gpu", 	&aclk_gpu),
 	#endif
@@ -2733,7 +2733,7 @@ static struct clk_lookup clks[] = {
 
 	CLK(NULL, "dclk_lcdc0", &dclk_lcdc0),
 	CLK(NULL, "dclk_lcdc1", &dclk_lcdc1),
-	
+
 	CLK(NULL, "cif_out_pll", &cif_out_pll),
 	CLK(NULL, "cif0_out_div", &cif0_out_div),
 
@@ -2746,7 +2746,7 @@ static struct clk_lookup clks[] = {
 	CLK("rk29_i2s.0", "i2s_div", &clk_i2s0_div),
 	CLK("rk29_i2s.0", "i2s_frac_div", &clk_i2s0_frac_div),
 	CLK("rk29_i2s.0", "i2s", &clk_i2s0),
-	
+
 	// actually no i2s1
 	CLK("rk29_i2s.1", "i2s_div", &clk_i2s0_div),
 	CLK("rk29_i2s.1", "i2s_frac_div", &clk_i2s0_frac_div),
@@ -2763,7 +2763,7 @@ static struct clk_lookup clks[] = {
 	CLK1(otgphy1_480m),
 	CLK1(hsicphy_480m),
 	CLK1(hsicphy_12m),
-	
+
 	CLK(NULL, "rmii_clkin", &rmii_clkin),
 	CLK(NULL, "mac_ref_div", &clk_mac_pll_div), // compatible with rk29
 	CLK1(mac_ref),
@@ -2777,7 +2777,7 @@ static struct clk_lookup clks[] = {
 	CLK1(hsadc),
 
 	CLK1(saradc),
-	
+
 	CLK1(smc),
 	CLK(NULL, "smc_inv",	&clkn_smc),
 
@@ -2805,13 +2805,13 @@ static struct clk_lookup clks[] = {
 	CLK1(timer0),
 	CLK1(timer1),
 	CLK1(timer2),
-	
+
 	/*************************aclk_cpu***********************/
 	CLK1(dma1),
 	CLK1(l2mem_con),
 	CLK1(intmem),
 	CLK1(aclk_strc_sys),
-	
+
 	/*************************hclk_cpu***********************/
 	CLK1(rom),
 	CLK("rk29_i2s.0", "hclk_i2s", &clk_hclk_i2s0_2ch),
@@ -2898,7 +2898,7 @@ static struct clk_lookup clks[] = {
 	CLK(NULL, "aclk_lcdc1",	&clk_aclk_lcdc1),
 	CLK1(aclk_rga),
 	/************************power domain**********************/
-	
+
 	PD_CLK(pd_peri),
 	PD_CLK(pd_display),
 	PD_CLK(pd_video),
@@ -2956,7 +2956,7 @@ static void __init rk30_init_enable_clocks(void)
 	#if 0
 	 clk_enable_nolock(&dclk_lcdc0);
 	 clk_enable_nolock(&dclk_lcdc1);
-	
+
 	 clk_enable_nolock(&cif_out_pll);
 	 clk_enable_nolock(&cif0_out_div);
 
@@ -2969,7 +2969,7 @@ static void __init rk30_init_enable_clocks(void)
 	 clk_enable_nolock(&clk_i2s0_div);
 	 clk_enable_nolock(&clk_i2s0_frac_div);
 	 clk_enable_nolock(&clk_i2s0);
-	
+
 	  actually no i2s1
 	 clk_enable_nolock(&clk_i2s0_div);
 	 clk_enable_nolock(&clk_i2s0_frac_div);
@@ -2986,13 +2986,13 @@ static void __init rk30_init_enable_clocks(void)
 	clk_enable_nolock(&clk_otgphy1_480m);
 	clk_enable_nolock(&clk_hsicphy_480m);
 	clk_enable_nolock(&clk_hsicphy_12m);
-	#endif	
-	
+	#endif
+
 	#if 0
 	clk_enable_nolock(&rmii_clkin);
 	clk_enable_nolock(&clk_mac_pll_div); // compatible with rk29
 	clk_enable_nolock(&clk_mac_ref);
-	clk_enable_nolock(&clk_mii_tx);	
+	clk_enable_nolock(&clk_mii_tx);
 	#endif
 
 	#if 0
@@ -3054,13 +3054,13 @@ static void __init rk30_init_enable_clocks(void)
 	clk_enable_nolock(&clk_timer1);
 	clk_enable_nolock(&clk_timer2);
 	#endif
-	
+
 	/*************************aclk_cpu***********************/
 	clk_enable_nolock(&clk_dma1);
 	clk_enable_nolock(&clk_l2mem_con);
 	clk_enable_nolock(&clk_intmem);
 	clk_enable_nolock(&clk_aclk_strc_sys);
-	
+
 	/*************************hclk_cpu***********************/
 	clk_enable_nolock(&clk_rom);
 	#if 0
@@ -3192,11 +3192,11 @@ static void periph_clk_set_init(void)
 			hclk_p = aclk_p >> 0;
 			pclk_p = aclk_p >> 1;
 			break;
-		case 384 * MHZ: 
-			aclk_p = ppll_rate >> 1; 
-			hclk_p = aclk_p >> 1; 
-			pclk_p = aclk_p >> 2; 
-			break; 
+		case 384 * MHZ:
+			aclk_p = ppll_rate >> 1;
+			hclk_p = aclk_p >> 1;
+			pclk_p = aclk_p >> 2;
+			break;
 		case 594 * MHZ:
 			aclk_p = ppll_rate >> 2;
 			hclk_p = aclk_p >> 0;
@@ -3316,7 +3316,7 @@ void rk_clock_common_uart_init(struct clk *cpll_clk,struct clk *gpll_clk)
 		else
 		{
 			p_clk=gpll_clk;
-		}	
+		}
 		rate=50*MHZ;
 	}
 	clk_set_parent_nolock(&clk_uart_pll, p_clk);
@@ -3349,9 +3349,9 @@ static void __init rk30_clock_common_init(unsigned long gpll_rate, unsigned long
 	clk_set_rate_nolock(&clk_spi1, clk_spi1.parent->rate);
 
 	// uart
-	
+
 	rk_clock_common_uart_init(&codec_pll_clk,&general_pll_clk);
-	
+
 	//mac
 	if(!(gpll_rate % (50 * MHZ)))
 		clk_set_parent_nolock(&clk_mac_pll_div, &general_pll_clk);
@@ -3383,7 +3383,7 @@ static void __init rk30_clock_common_init(unsigned long gpll_rate, unsigned long
 
 	clk_set_rate_nolock(&aclk_vepu, 300 * MHZ);
 	clk_set_rate_nolock(&aclk_vdpu, 300 * MHZ);
-	
+
 	if(rk30_clock_flags&CLK_GPU_GPLL)
 	{
 		clk_set_parent_nolock(&clk_gpu, &general_pll_clk);
@@ -3394,10 +3394,10 @@ static void __init rk30_clock_common_init(unsigned long gpll_rate, unsigned long
 	{
 		clk_set_parent_nolock(&clk_gpu, &codec_pll_clk);
 		clk_set_parent_nolock(&aclk_gpu, &codec_pll_clk);
-	}	
+	}
 	clk_set_rate_nolock(&clk_gpu, 200 * MHZ);
 	clk_set_rate_nolock(&aclk_gpu, 200 * MHZ);
-	
+
 	clk_set_rate_nolock(&clk_uart0, 49500000);
 	clk_set_rate_nolock(&clk_sdmmc, 24750000);
 	clk_set_rate_nolock(&clk_sdio, 24750000);
@@ -3967,5 +3967,3 @@ void __init rk30_clock_init_test(void)
 
 
 #endif
-
-
